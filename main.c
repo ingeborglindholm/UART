@@ -11,42 +11,6 @@ int checkBbtn(){
 	return (!(GPIO0->IN & (1 << 23))); 
 }
 
-int oppg2_44(){
-    int switch_lights = 0;
-    int lights_on = 0; 
-    int sleep = 0;  
-
-    while(1){
-        char letter = uart_read(); 
-        if (letter == '\n'){
-            switch_lights = 0; 
-        } else{
-            switch_lights = 1; 
-        }
-
-        if (lights_on == 1){
-            if (switch_lights == 1){
-                gpio_lights_off(); 
-            }
-            else {
-                gpio_lights_on(); 
-            }
-        }
-        else{
-            if (switch_lights == 1){
-                gpio_lights_on(); 
-            }
-            else {
-                gpio_lights_off(); 
-            }        
-        }
-        sleep = 10000;
-		while(--sleep);
-    }
-
-    return 0; 
-
-}
 
 int oppg2_4(){
 
