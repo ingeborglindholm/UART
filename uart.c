@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "gpio.h"
 
 void uart_init(){
     GPIO1->PIN_CNF[8] = 1;  //TX
@@ -29,14 +30,26 @@ void uart_send(char letter){
 
 char uart_read(){
     //UART->EVENTS_RXDRDY = 0;
+
     UART->TASKS_STARTRX = 1;
     if(UART->EVENTS_RXDRDY){
         UART->EVENTS_RXDRDY = 0;
         char letter = UART->RXD;
         return letter;
-    }else{
+    }
+    else{
         return '\0';
     }
 }
 
-//void uart_send_str(char ** str)
+
+void uart_send_str(char ** str){
+    UART->TASKS_STARTTX = 1;
+    char * letter_ptr = *str;
+    while(*letter_ptr != '\0'){
+        UART->TXD = *letter_ptr;
+        while(!UART->EVENTS_TXDRDY);
+        UART->EVENTS_TXDRDY = 0;
+        letter_ptr++;
+    }
+}
